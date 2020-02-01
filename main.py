@@ -57,4 +57,7 @@ United_Nations_2017 = United_Nations_2017.astype({'UN GDP': 'int'})
 plt.subplot(311)
 sns.lineplot(x=United_Nations_2017[United_Nations_2017['Rank'] < 11]['Country'], y=United_Nations_2017[United_Nations_2017['Rank'] < 11]['UN GDP'])
 
+plt.subplot(312)
+sns.lineplot(x=United_Nations_2017[United_Nations_2017['Rank'] < 21]['Country'], y=United_Nations_2017[United_Nations_2017['Rank'] < 21]['UN GDP'])
+
 plt.show()

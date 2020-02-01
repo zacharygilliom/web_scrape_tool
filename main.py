@@ -8,6 +8,7 @@ def strip_val(val):
 	val[1] = val[1].replace('\xa0', '')
 	return val
 
+
 website_url = requests.get('https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)_per_capita').text
 
 soup = BeautifulSoup(website_url, 'lxml')
@@ -39,25 +40,46 @@ World_Bank_2018 = pd.DataFrame(columns=['Rank', 'Country', 'World Bank GDP'], da
 
 United_Nations_2017 = pd.DataFrame(columns=['Rank', 'Country', 'UN GDP'], data=United_Nations_2017_data)
 
-# United_Nations_2017['Rank'] = United_Nations_2017['Rank'].replace('-', 0)
 
-United_Nations_2017.drop_duplicates('Rank', inplace=True)
-United_Nations_2017.drop(3, inplace=True)
-United_Nations_2017.drop(96, inplace=True)
+United_Nations_2017.replace((United_Nations_2017.at[3, 'Rank']), '0', inplace=True)
 
-United_Nations_2017 = United_Nations_2017.astype({'Rank': 'str', 'UN GDP': 'str'}).astype({'Rank':'int'})
+United_Nations_2017.replace((United_Nations_2017.at[96, 'Rank']), '0', inplace=True)
 
-print(United_Nations_2017.dtypes)
+United_Nations_2017.replace(',', '', inplace=True, regex=True)
 
-for index, row in United_Nations_2017.iterrows():
-	United_Nations_2017.loc[index, 'UN GDP'] = row['UN GDP'].replace(',', '')
+United_Nations_2017 = United_Nations_2017[United_Nations_2017['Rank'] != '0']
 
-United_Nations_2017 = United_Nations_2017.astype({'UN GDP': 'int'})
+United_Nations_2017 = United_Nations_2017.astype({'Rank': 'str', 'UN GDP': 'str'}).astype({'Rank': 'int', 'UN GDP': 'int'})
+
+
+World_Bank_2018.replace((World_Bank_2018.at[1, 'Rank']), '0', inplace=True)
+
+World_Bank_2018.replace(',', '', inplace=True, regex=True)
+
+World_Bank_2018 = World_Bank_2018[World_Bank_2018['Rank'] != '0']
+
+World_Bank_2018 = World_Bank_2018.astype({'Rank': 'str', 'World Bank GDP': 'str'}).astype({'Rank': 'int', 'World Bank GDP': 'int'})
+
+
+International_Monetary_Fund_2019.replace((International_Monetary_Fund_2019.at[2, 'Rank']), '0', inplace=True)
+
+International_Monetary_Fund_2019.replace(',', '', inplace=True, regex=True)
+
+International_Monetary_Fund_2019 = International_Monetary_Fund_2019[International_Monetary_Fund_2019['Rank'] != '0']
+
+International_Monetary_Fund_2019 = International_Monetary_Fund_2019.astype({'Rank': 'str', 'IMF GDP': 'str'}).astype({'Rank': 'int', 'IMF GDP': 'int'})
+
 
 plt.subplot(311)
-sns.lineplot(x=United_Nations_2017[United_Nations_2017['Rank'] < 11]['Country'], y=United_Nations_2017[United_Nations_2017['Rank'] < 11]['UN GDP'])
+sns.barplot(x=United_Nations_2017[United_Nations_2017['Rank'] < 11]['Country'], y=United_Nations_2017[United_Nations_2017['Rank'] < 11]['UN GDP'])
+plt.title('Top Countries by GDP in 2017, 2018, and 2019')
+
 
 plt.subplot(312)
-sns.lineplot(x=United_Nations_2017[United_Nations_2017['Rank'] < 21]['Country'], y=United_Nations_2017[United_Nations_2017['Rank'] < 21]['UN GDP'])
+sns.barplot(x=World_Bank_2018[World_Bank_2018['Rank'] < 11]['Country'], y=World_Bank_2018[World_Bank_2018['Rank'] < 11]['World Bank GDP'])
+
+plt.subplot(313)
+sns.barplot(x=International_Monetary_Fund_2019[International_Monetary_Fund_2019['Rank'] < 11]['Country'], 
+			y=International_Monetary_Fund_2019[International_Monetary_Fund_2019['Rank'] < 11]['IMF GDP'])
 
 plt.show()

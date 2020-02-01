@@ -42,10 +42,8 @@ United_Nations_2017 = pd.DataFrame(columns=['Rank', 'Country', 'UN GDP'], data=U
 # United_Nations_2017['Rank'] = United_Nations_2017['Rank'].replace('-', 0)
 
 United_Nations_2017.drop_duplicates('Rank', inplace=True)
-
 United_Nations_2017.drop(3, inplace=True)
 United_Nations_2017.drop(96, inplace=True)
-
 
 United_Nations_2017 = United_Nations_2017.astype({'Rank': 'str', 'UN GDP': 'str'}).astype({'Rank':'int'})
 
@@ -53,17 +51,8 @@ print(United_Nations_2017.dtypes)
 
 for index, row in United_Nations_2017.iterrows():
 	United_Nations_2017.loc[index, 'UN GDP'] = row['UN GDP'].replace(',', '')
-	# print(row['UN GDP'])
 
 United_Nations_2017 = United_Nations_2017.astype({'UN GDP': 'int'})
-# print(United_Nations_2017)
-# print(United_Nations_2017.dtypes)
-
-
-# print(International_Monetary_Fund_2019_data)
-# print(International_Monetary_Fund_2019)
-# print(World_Bank_2018)
-# print(United_Nations_2017)
 
 plt.subplot(311)
 sns.lineplot(x=United_Nations_2017[United_Nations_2017['Rank'] < 11]['Country'], y=United_Nations_2017[United_Nations_2017['Rank'] < 11]['UN GDP'])
